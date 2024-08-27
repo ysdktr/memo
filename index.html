@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキル一覧表</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <style>
+        body {
+            font-size: 12px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 検索フォームとチェックボックス -->
+    <div>
+        <input type="text" id="searchInput" placeholder="検索...">
+        <button id="searchButton">検索</button>
+        <br>
+        <label><input type="checkbox" class="toggle-column" data-column="0" checked> Name</label>
+        <label><input type="checkbox" class="toggle-column" data-column="1" checked> Members</label>
+        <label><input type="checkbox" class="toggle-column" data-column="2" checked> Basic Skill</label>
+        <label><input type="checkbox" class="toggle-column" data-column="3" checked> Add Skills</label>
+        <label><input type="checkbox" class="toggle-column" data-column="4" checked> Skill 1</label>
+        <label><input type="checkbox" class="toggle-column" data-column="5" checked> Skill 2</label>
+        <label><input type="checkbox" class="toggle-column" data-column="6" checked> Skill 3</label>
+        <label><input type="checkbox" class="toggle-column" data-column="7" checked> Skill 4</label>
+        <label><input type="checkbox" class="toggle-column" data-column="8" checked> Max Skill</label>
+        <label><input type="checkbox" class="toggle-column" data-column="9" checked> Series</label>
+        <label><input type="checkbox" class="toggle-column" data-column="10" checked> Web</label>
+        <label><input type="checkbox" class="toggle-column" data-column="11" checked> Max Bonus</label>
+    </div>
+
+    <div class="table-container">
+        <table id="skillTable" class="display">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Members</th>
+                    <th>Basic Skill</th>
+                    <th>Add Skills</th>
+                    <th>Skill 1</th>
+                    <th>Skill 2</th>
+                    <th>Skill 3</th>
+                    <th>Skill 4</th>
+                    <th>Max Skill</th>
+                    <th>Series</th>
+                    <th>Web</th>
+                    <th>Max Bonus</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- jQuery and DataTables JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fetch data from the JSON file
+            let jsonData = [];
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    jsonData = data;
+                    // Initialize DataTables
+                    const table = $('#skillTable').DataTable({
+                        data: jsonData,
+                        columns: [
+                            { data: 'name' },
+                            { data: 'member', render: members => members.join(', ') },
+                            { data: 'basicskill' },
+                            { data: 'addskill', render: addskill => addskill.join(', ') },
+                            { data: 'skill1', render: skill => skill.map(s => s.content).join('; ') },
+                            { data: 'skill2', render: skill => skill.map(s => s.content).join('; ') },
+                            { data: 'skill3', render: skill => skill.map(s => s.content).join('; ') },
+                            { data: 'skill4', render: skill => skill.map(s => s.content).join('; ') },
+                            { data: 'maxskill', render: skill => skill.map(s => s.content).join('; ') },
+                            { data: 'series', render: skill => skill.map(s => s.content).join('; ') },
+                            { data: 'web' },
+                            { data: 'maxbonus' }
+                        ]
+                    });
+
+                    // Search filter
+                    $('#searchButton').on('click', function() {
+                        table.search($('#searchInput').val()).draw();
+                    });
+
+                    // Column visibility toggle
+                    $('.toggle-column').on('change', function() {
+                        const column = table.column($(this).data('column'));
+                        column.visible(!column.visible());
+                    });
+                })
+                .catch(error => console.error('Error fetching JSON data:', error));
+        });
+    </script>
+</body>
+</html>
