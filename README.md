@@ -1,4 +1,4 @@
 # memo
 
 
-https://github.io/ysdktr/memo/index.html
+https://ysdktr.github.io/memo/index.html
