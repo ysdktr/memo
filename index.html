@@ -10,9 +10,6 @@
         body {
             font-size: 12px;
         }
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -65,14 +62,12 @@
     <script>
         $(document).ready(function() {
             // Fetch data from the JSON file
-            let jsonData = [];
             fetch('data.json')
                 .then(response => response.json())
                 .then(data => {
-                    jsonData = data;
                     // Initialize DataTables
                     const table = $('#skillTable').DataTable({
-                        data: jsonData,
+                        data: data,
                         columns: [
                             { data: 'name' },
                             { data: 'member', render: members => members.join(', ') },
